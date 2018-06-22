@@ -1,0 +1,69 @@
+<div>
+  <div class="row form-ui">
+    <div class="col-md-6">
+      <div class="form">
+        <h4>Generated Form Preview</h4>
+        <app-dynamic-form [questions]="questions"></app-dynamic-form>
+      </div>
+    </div>
+    <div class="col-md-5">
+      <h4>Form Design</h4>
+      <form [formGroup]="fForm" (ngSubmit)="SaveFData()">
+        <div class="form-group">
+          <label>Question Type</label>
+          <select class="form-control" ngModel formControlName="qtype" (change)="loadForm($event.target.value)">
+            <option value="TextBoxQuestion">TextBoxQuestion</option>
+            <option value="DropdownQuestion">DropdownQuestion</option>
+            <option value="CheckBoxQuestion">CheckBoxQuestion</option>
+            <option value="RadioButtonQuestion">RadioButtonQuestion</option>
+          </select>
+        </div>
+
+        <div *ngIf="isChoosed">
+          <div class="form-group">
+            <label>Key</label>
+            <input type="text" formControlName="key" class="form-control" (keyup)="checkKey($event)">
+            <small *ngIf="isExists" class="form-text text-muted">Key already exists. Try another!</small>
+          </div>
+          <div class="form-group">
+            <label>Label Text</label>
+            <input type="text" formControlName="label" class="form-control">
+          </div>
+          <div class="form-group">
+            <div class="form-check">
+              <div class="row">
+                <div class="col">
+                  <input class="form-check-input" type="checkbox" formControlName="required">
+                  <label class="form-check-label" for="required">Required field</label>
+                </div>
+                <div class="col" *ngIf="isOption">
+                  <input type="text" class="form-control" placeholder="Key" formControlName="minimum"/>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="isOption" formArrayName="options">
+            <div class="form-group">
+              <label>Control Options</label>
+              <input type="button" (click)="addOption()" value="Add Option" class="btn btn-info btn-sm" />
+            </div>
+            <div class="form-group" *ngFor="let option of fForm.controls.options.controls;let i=index">
+              <div class="row" [formGroupName]="i">
+                <div class="col-md-5">
+                  <input type="text" class="form-control" formControlName="key" placeholder="Key" />
+                </div>
+                <div class="col-md-5">
+                  <input type="text" class="form-control" formControlName="text" placeholder="Text" />
+                </div>
+                <div class="col-md-2">
+                  <input type="button" (click)="removeOption(i)" value="Remove" class="btn btn-danger btn-sm" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button type="submit" [disabled]="!fForm.valid" class="btn btn-primary"> Add Field</button>
+      </form>
+    </div>
+  </div>
+</div>
